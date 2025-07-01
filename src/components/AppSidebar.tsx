@@ -87,18 +87,6 @@ export function AppSidebar({ activeView, setActiveView }: AppSidebarProps) {
           </SidebarGroup>
         </div>
 
-        {/* Settings */}
-        <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-          <Button
-            variant="ghost"
-            className="w-full justify-start text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
-            onClick={() => setActiveView('settings')}
-          >
-            <Settings className="h-5 w-5" />
-            {!isCollapsed && <span className="ml-3">Settings</span>}
-          </Button>
-        </div>
-
         {/* User info at bottom */}
         <div className="p-4 border-t border-gray-200 dark:border-gray-700 space-y-3">
           {!isCollapsed && (
