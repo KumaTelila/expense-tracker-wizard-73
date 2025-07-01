@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Settings, Palette, Layout, Monitor, Sun, Moon, Sidebar, Header } from 'lucide-react';
+import { Settings, Palette, Layout, Monitor, Sun, Moon, Sidebar, Navigation } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -157,7 +157,7 @@ export function FloatingSettings() {
           {/* Header Position */}
           <div className="space-y-3">
             <h3 className="flex items-center gap-2 font-medium">
-              <Header className="h-4 w-4" />
+              <Navigation className="h-4 w-4" />
               Header Position
             </h3>
             
