@@ -40,9 +40,9 @@ export function FloatingSettings() {
         </Button>
       </DialogTrigger>
       
-      <DialogContent className="sm:max-w-md max-h-[80vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-md max-h-[80vh] overflow-y-auto dark:bg-gray-900 dark:border-gray-700">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className="flex items-center gap-2 dark:text-white">
             <Settings className="h-5 w-5" />
             Customize Layout & Theme
           </DialogTitle>
@@ -51,7 +51,7 @@ export function FloatingSettings() {
         <div className="space-y-6">
           {/* Theme Settings */}
           <div className="space-y-3">
-            <h3 className="flex items-center gap-2 font-medium">
+            <h3 className="flex items-center gap-2 font-medium dark:text-white">
               <Palette className="h-4 w-4" />
               Theme
             </h3>
@@ -62,15 +62,15 @@ export function FloatingSettings() {
               onValueChange={(value) => value && setTheme(value as any)}
               className="grid grid-cols-3 gap-2"
             >
-              <ToggleGroupItem value="light" className="flex flex-col gap-1 p-3">
+              <ToggleGroupItem value="light" className="flex flex-col gap-1 p-3 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
                 <Sun className="h-4 w-4" />
                 <span className="text-xs">Light</span>
               </ToggleGroupItem>
-              <ToggleGroupItem value="dark" className="flex flex-col gap-1 p-3">
+              <ToggleGroupItem value="dark" className="flex flex-col gap-1 p-3 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
                 <Moon className="h-4 w-4" />
                 <span className="text-xs">Dark</span>
               </ToggleGroupItem>
-              <ToggleGroupItem value="system" className="flex flex-col gap-1 p-3">
+              <ToggleGroupItem value="system" className="flex flex-col gap-1 p-3 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
                 <Monitor className="h-4 w-4" />
                 <span className="text-xs">System</span>
               </ToggleGroupItem>
@@ -79,13 +79,16 @@ export function FloatingSettings() {
 
           {/* Custom Themes */}
           <div className="space-y-3">
-            <h3 className="font-medium">Custom Themes</h3>
+            <h3 className="font-medium dark:text-white">Custom Themes</h3>
             <div className="grid grid-cols-2 gap-2">
               <Button
                 variant={!customTheme ? "default" : "outline"}
                 size="sm"
                 onClick={() => setCustomTheme(null)}
-                className="h-auto p-3"
+                className={`h-auto p-3 ${!customTheme 
+                  ? 'bg-gray-900 text-white hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200' 
+                  : 'border-gray-300 text-gray-900 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700'
+                }`}
               >
                 Default
               </Button>
@@ -95,10 +98,11 @@ export function FloatingSettings() {
                   variant={customTheme?.id === theme.id ? "default" : "outline"}
                   size="sm"
                   onClick={() => setCustomTheme(theme)}
-                  className="h-auto p-3"
+                  className="h-auto p-3 border dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
                   style={{
                     backgroundColor: customTheme?.id === theme.id ? theme.primary : undefined,
-                    borderColor: theme.primary
+                    borderColor: theme.primary,
+                    color: customTheme?.id === theme.id ? 'white' : undefined
                   }}
                 >
                   {theme.name}
@@ -109,7 +113,7 @@ export function FloatingSettings() {
 
           {/* Layout Settings */}
           <div className="space-y-3">
-            <h3 className="flex items-center gap-2 font-medium">
+            <h3 className="flex items-center gap-2 font-medium dark:text-white">
               <Layout className="h-4 w-4" />
               Layout Style
             </h3>
@@ -120,13 +124,13 @@ export function FloatingSettings() {
               onValueChange={(value) => value && setLayout(value as any)}
               className="grid grid-cols-3 gap-2"
             >
-              <ToggleGroupItem value="default" className="flex flex-col gap-1 p-3">
+              <ToggleGroupItem value="default" className="flex flex-col gap-1 p-3 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
                 <span className="text-xs">Default</span>
               </ToggleGroupItem>
-              <ToggleGroupItem value="compact" className="flex flex-col gap-1 p-3">
+              <ToggleGroupItem value="compact" className="flex flex-col gap-1 p-3 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
                 <span className="text-xs">Compact</span>
               </ToggleGroupItem>
-              <ToggleGroupItem value="minimal" className="flex flex-col gap-1 p-3">
+              <ToggleGroupItem value="minimal" className="flex flex-col gap-1 p-3 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
                 <span className="text-xs">Minimal</span>
               </ToggleGroupItem>
             </ToggleGroup>
@@ -134,7 +138,7 @@ export function FloatingSettings() {
 
           {/* Sidebar Position */}
           <div className="space-y-3">
-            <h3 className="flex items-center gap-2 font-medium">
+            <h3 className="flex items-center gap-2 font-medium dark:text-white">
               <Sidebar className="h-4 w-4" />
               Sidebar Position
             </h3>
@@ -145,10 +149,10 @@ export function FloatingSettings() {
               onValueChange={(value) => value && setSidebarPosition(value as any)}
               className="grid grid-cols-2 gap-2"
             >
-              <ToggleGroupItem value="left" className="flex flex-col gap-1 p-3">
+              <ToggleGroupItem value="left" className="flex flex-col gap-1 p-3 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
                 <span className="text-xs">Left</span>
               </ToggleGroupItem>
-              <ToggleGroupItem value="right" className="flex flex-col gap-1 p-3">
+              <ToggleGroupItem value="right" className="flex flex-col gap-1 p-3 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
                 <span className="text-xs">Right</span>
               </ToggleGroupItem>
             </ToggleGroup>
@@ -156,7 +160,7 @@ export function FloatingSettings() {
 
           {/* Header Position */}
           <div className="space-y-3">
-            <h3 className="flex items-center gap-2 font-medium">
+            <h3 className="flex items-center gap-2 font-medium dark:text-white">
               <Navigation className="h-4 w-4" />
               Header Position
             </h3>
@@ -167,10 +171,10 @@ export function FloatingSettings() {
               onValueChange={(value) => value && setHeaderPosition(value as any)}
               className="grid grid-cols-2 gap-2"
             >
-              <ToggleGroupItem value="top" className="flex flex-col gap-1 p-3">
+              <ToggleGroupItem value="top" className="flex flex-col gap-1 p-3 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
                 <span className="text-xs">Top</span>
               </ToggleGroupItem>
-              <ToggleGroupItem value="hidden" className="flex flex-col gap-1 p-3">
+              <ToggleGroupItem value="hidden" className="flex flex-col gap-1 p-3 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
                 <span className="text-xs">Hidden</span>
               </ToggleGroupItem>
             </ToggleGroup>

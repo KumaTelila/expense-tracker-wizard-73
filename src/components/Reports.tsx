@@ -1,17 +1,23 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, Download, TrendingUp, TrendingDown, DollarSign, BarChart3 } from 'lucide-react';
+import { Calendar, Download, TrendingUp, TrendingDown, DollarSign, BarChart3, FileText, FileSpreadsheet } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar, AreaChart, Area } from 'recharts';
 import { useTheme } from '@/contexts/ThemeContext';
+import { exportToPDF, exportToCSV, ReportData } from '@/utils/reportExport';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 const Reports = () => {
   const { isDark } = useTheme();
   const [selectedPeriod, setSelectedPeriod] = useState('6months');
-  const [reportData, setReportData] = useState({
+  const [reportData, setReportData] = useState<ReportData>({
     monthlyTrend: [],
     categoryBreakdown: [],
     weeklySpending: [],
@@ -48,7 +54,7 @@ const Reports = () => {
       { type: 'positive', title: 'Great job!', description: 'You spent 15% less on dining out this month compared to last month.' },
       { type: 'warning', title: 'Budget Alert', description: 'You\'re approaching your monthly shopping budget limit.' },
       { type: 'info', title: 'Spending Pattern', description: 'Your highest spending day is typically Friday.' },
-      { type: 'positive.', title: 'Savings Opportunity', description: 'You could save $120/month by reducing subscription services.' },
+      { type: 'positive', title: 'Savings Opportunity', description: 'You could save $120/month by reducing subscription services.' },
     ];
 
     setReportData({
@@ -58,6 +64,14 @@ const Reports = () => {
       insights
     });
   }, [selectedPeriod]);
+
+  const handleExportPDF = () => {
+    exportToPDF(reportData, selectedPeriod);
+  };
+
+  const handleExportCSV = () => {
+    exportToCSV(reportData, selectedPeriod);
+  };
 
   const totalSpent = reportData.categoryBreakdown.reduce((sum, item) => sum + item.value, 0);
   const averageMonthly = reportData.monthlyTrend.reduce((sum, item) => sum + item.amount, 0) / reportData.monthlyTrend.length;
@@ -110,10 +124,24 @@ const Reports = () => {
                 <SelectItem value="1year">Last Year</SelectItem>
               </SelectContent>
             </Select>
-            <Button variant="outline" className="dark:border-gray-600 dark:text-gray-300">
-              <Download className="h-4 w-4 mr-2" />
-              Export
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="dark:border-gray-600 dark:text-gray-300">
+                  <Download className="h-4 w-4 mr-2" />
+                  Export
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="dark:bg-gray-800 dark:border-gray-600">
+                <DropdownMenuItem onClick={handleExportPDF} className="dark:text-gray-300 dark:hover:bg-gray-700">
+                  <FileText className="h-4 w-4 mr-2" />
+                  Export as PDF
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleExportCSV} className="dark:text-gray-300 dark:hover:bg-gray-700">
+                  <FileSpreadsheet className="h-4 w-4 mr-2" />
+                  Export as CSV
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
 
