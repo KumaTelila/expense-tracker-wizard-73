@@ -4,8 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { DollarSign, TrendingUp, TrendingDown, Receipt, Plus, Calendar } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar } from 'recharts';
+import { useTheme } from '@/contexts/ThemeContext';
 
 const DashboardContent = () => {
+  const { isDark } = useTheme();
   const [expenses, setExpenses] = useState([]);
   const [stats, setStats] = useState({
     totalExpenses: 0,
@@ -51,14 +53,21 @@ const DashboardContent = () => {
     { name: 'Entertainment', value: 150, color: '#8dd1e1' },
   ];
 
+  // Theme-aware colors for charts
+  const chartColors = {
+    grid: isDark ? '#374151' : '#f0f0f0',
+    axis: isDark ? '#9ca3af' : '#666',
+    line: isDark ? '#60a5fa' : '#8884d8',
+  };
+
   return (
-    <div className="flex-1 p-6 bg-gray-50">
+    <div className="flex-1 p-6 bg-gray-50 dark:bg-gray-950">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-            <p className="text-gray-600 mt-1">Welcome back! Here's your financial overview.</p>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">Welcome back! Here's your financial overview.</p>
           </div>
           <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
             <Plus className="h-4 w-4 mr-2" />
@@ -116,9 +125,9 @@ const DashboardContent = () => {
         {/* Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Expense Trend */}
-          <Card>
+          <Card className="dark:bg-gray-900 dark:border-gray-700">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 dark:text-white">
                 <TrendingUp className="h-5 w-5 text-blue-600" />
                 Expense Trend
               </CardTitle>
@@ -127,22 +136,16 @@ const DashboardContent = () => {
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis dataKey="name" stroke="#666" />
-                    <YAxis stroke="#666" />
+                    <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} />
+                    <XAxis dataKey="name" stroke={chartColors.axis} />
+                    <YAxis stroke={chartColors.axis} />
                     <Line 
                       type="monotone" 
                       dataKey="amount" 
-                      stroke="url(#colorGradient)" 
+                      stroke={chartColors.line}
                       strokeWidth={3}
-                      dot={{ fill: '#8884d8', strokeWidth: 2, r: 4 }}
+                      dot={{ fill: chartColors.line, strokeWidth: 2, r: 4 }}
                     />
-                    <defs>
-                      <linearGradient id="colorGradient" x1="0" y1="0" x2="1" y2="0">
-                        <stop offset="0%" stopColor="#8884d8" />
-                        <stop offset="100%" stopColor="#82ca9d" />
-                      </linearGradient>
-                    </defs>
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -150,9 +153,9 @@ const DashboardContent = () => {
           </Card>
 
           {/* Category Breakdown */}
-          <Card>
+          <Card className="dark:bg-gray-900 dark:border-gray-700">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 dark:text-white">
                 <Receipt className="h-5 w-5 text-purple-600" />
                 Category Breakdown
               </CardTitle>
@@ -182,31 +185,31 @@ const DashboardContent = () => {
         </div>
 
         {/* Recent Transactions */}
-        <Card>
+        <Card className="dark:bg-gray-900 dark:border-gray-700">
           <CardHeader>
-            <CardTitle className="flex items-center justify-between">
+            <CardTitle className="flex items-center justify-between dark:text-white">
               <div className="flex items-center gap-2">
                 <Receipt className="h-5 w-5 text-green-600" />
                 Recent Transactions
               </div>
-              <Button variant="outline" size="sm">View All</Button>
+              <Button variant="outline" size="sm" className="dark:border-gray-600 dark:text-gray-300">View All</Button>
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {expenses.slice(0, 5).map((expense: any) => (
-                <div key={expense.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <div key={expense.id} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                   <div className="flex items-center gap-4">
                     <div className="h-10 w-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
                       {expense.category.charAt(0)}
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900">{expense.description}</p>
-                      <p className="text-sm text-gray-500">{expense.category} • {expense.date}</p>
+                      <p className="font-medium text-gray-900 dark:text-white">{expense.description}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{expense.category} • {expense.date}</p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="font-semibold text-gray-900">${expense.amount.toFixed(2)}</p>
+                    <p className="font-semibold text-gray-900 dark:text-white">${expense.amount.toFixed(2)}</p>
                   </div>
                 </div>
               ))}

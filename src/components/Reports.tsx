@@ -6,8 +6,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Calendar, Download, TrendingUp, TrendingDown, DollarSign, BarChart3 } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar, AreaChart, Area } from 'recharts';
+import { useTheme } from '@/contexts/ThemeContext';
 
 const Reports = () => {
+  const { isDark } = useTheme();
   const [selectedPeriod, setSelectedPeriod] = useState('6months');
   const [reportData, setReportData] = useState({
     monthlyTrend: [],
@@ -61,6 +63,15 @@ const Reports = () => {
   const averageMonthly = reportData.monthlyTrend.reduce((sum, item) => sum + item.amount, 0) / reportData.monthlyTrend.length;
   const budgetVariance = reportData.monthlyTrend[reportData.monthlyTrend.length - 1]?.amount - reportData.monthlyTrend[reportData.monthlyTrend.length - 1]?.budget;
 
+  // Theme-aware colors for charts
+  const chartColors = {
+    grid: isDark ? '#374151' : '#f0f0f0',
+    axis: isDark ? '#9ca3af' : '#666',
+    line: isDark ? '#60a5fa' : '#8884d8',
+    area: isDark ? '#1f2937' : '#f5f5f5',
+    areaBorder: isDark ? '#4b5563' : '#e0e0e0',
+  };
+
   const getInsightIcon = (type: string) => {
     switch (type) {
       case 'positive': return <TrendingUp className="h-4 w-4 text-green-600" />;
@@ -71,35 +82,35 @@ const Reports = () => {
 
   const getInsightColor = (type: string) => {
     switch (type) {
-      case 'positive': return 'border-green-200 bg-green-50';
-      case 'warning': return 'border-orange-200 bg-orange-50';
-      default: return 'border-blue-200 bg-blue-50';
+      case 'positive': return isDark ? 'border-green-800 bg-green-900/20' : 'border-green-200 bg-green-50';
+      case 'warning': return isDark ? 'border-orange-800 bg-orange-900/20' : 'border-orange-200 bg-orange-50';
+      default: return isDark ? 'border-blue-800 bg-blue-900/20' : 'border-blue-200 bg-blue-50';
     }
   };
 
   return (
-    <div className="flex-1 p-6 bg-gray-50">
+    <div className="flex-1 p-6 bg-gray-50 dark:bg-gray-950">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Reports & Analytics</h1>
-            <p className="text-gray-600 mt-1">Gain insights into your spending patterns and financial health.</p>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Reports & Analytics</h1>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">Gain insights into your spending patterns and financial health.</p>
           </div>
           <div className="flex gap-3">
             <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
-              <SelectTrigger className="w-40">
+              <SelectTrigger className="w-40 dark:border-gray-600 dark:bg-gray-800">
                 <Calendar className="h-4 w-4 mr-2" />
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="dark:bg-gray-800 dark:border-gray-600">
                 <SelectItem value="1month">Last Month</SelectItem>
                 <SelectItem value="3months">Last 3 Months</SelectItem>
                 <SelectItem value="6months">Last 6 Months</SelectItem>
                 <SelectItem value="1year">Last Year</SelectItem>
               </SelectContent>
             </Select>
-            <Button variant="outline">
+            <Button variant="outline" className="dark:border-gray-600 dark:text-gray-300">
               <Download className="h-4 w-4 mr-2" />
               Export
             </Button>
@@ -151,9 +162,9 @@ const Reports = () => {
         {/* Charts */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
           {/* Spending Trend */}
-          <Card>
+          <Card className="dark:bg-gray-900 dark:border-gray-700">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 dark:text-white">
                 <TrendingUp className="h-5 w-5 text-blue-600" />
                 Spending Trend vs Budget
               </CardTitle>
@@ -162,23 +173,23 @@ const Reports = () => {
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={reportData.monthlyTrend}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis dataKey="month" stroke="#666" />
-                    <YAxis stroke="#666" />
+                    <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} />
+                    <XAxis dataKey="month" stroke={chartColors.axis} />
+                    <YAxis stroke={chartColors.axis} />
                     <Area
                       type="monotone"
                       dataKey="budget"
                       stackId="1"
-                      stroke="#e0e0e0"
-                      fill="#f5f5f5"
+                      stroke={chartColors.areaBorder}
+                      fill={chartColors.area}
                       fillOpacity={0.8}
                     />
                     <Area
                       type="monotone"
                       dataKey="amount"
                       stackId="2"
-                      stroke="#8884d8"
-                      fill="#8884d8"
+                      stroke={chartColors.line}
+                      fill={chartColors.line}
                       fillOpacity={0.6}
                     />
                   </AreaChart>
@@ -188,9 +199,9 @@ const Reports = () => {
           </Card>
 
           {/* Category Breakdown */}
-          <Card>
+          <Card className="dark:bg-gray-900 dark:border-gray-700">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 dark:text-white">
                 <BarChart3 className="h-5 w-5 text-purple-600" />
                 Spending by Category
               </CardTitle>
@@ -223,26 +234,26 @@ const Reports = () => {
         {/* Category Details & Weekly Spending */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
           {/* Category Details */}
-          <Card>
+          <Card className="dark:bg-gray-900 dark:border-gray-700">
             <CardHeader>
-              <CardTitle>Category Breakdown</CardTitle>
+              <CardTitle className="dark:text-white">Category Breakdown</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {reportData.categoryBreakdown.map((category, index) => (
-                  <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                  <div key={index} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                     <div className="flex items-center gap-3">
                       <div
                         className="w-4 h-4 rounded-full"
                         style={{ backgroundColor: category.color }}
                       ></div>
                       <div>
-                        <p className="font-medium text-gray-900">{category.name}</p>
-                        <p className="text-sm text-gray-500">{category.percentage}% of total</p>
+                        <p className="font-medium text-gray-900 dark:text-white">{category.name}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{category.percentage}% of total</p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold text-gray-900">${category.value.toFixed(2)}</p>
+                      <p className="font-bold text-gray-900 dark:text-white">${category.value.toFixed(2)}</p>
                     </div>
                   </div>
                 ))}
@@ -251,9 +262,9 @@ const Reports = () => {
           </Card>
 
           {/* Weekly Spending */}
-          <Card>
+          <Card className="dark:bg-gray-900 dark:border-gray-700">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 dark:text-white">
                 <BarChart3 className="h-5 w-5 text-green-600" />
                 Weekly Spending Pattern
               </CardTitle>
@@ -262,9 +273,9 @@ const Reports = () => {
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={reportData.weeklySpending}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis dataKey="week" stroke="#666" />
-                    <YAxis stroke="#666" />
+                    <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} />
+                    <XAxis dataKey="week" stroke={chartColors.axis} />
+                    <YAxis stroke={chartColors.axis} />
                     <Bar dataKey="amount" fill="#82ca9d" radius={[4, 4, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
@@ -274,9 +285,9 @@ const Reports = () => {
         </div>
 
         {/* Insights */}
-        <Card>
+        <Card className="dark:bg-gray-900 dark:border-gray-700">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 dark:text-white">
               <TrendingUp className="h-5 w-5 text-blue-600" />
               Smart Insights
             </CardTitle>
@@ -288,8 +299,8 @@ const Reports = () => {
                   <div className="flex items-start gap-3">
                     {getInsightIcon(insight.type)}
                     <div className="flex-1">
-                      <h4 className="font-semibold text-gray-900 mb-1">{insight.title}</h4>
-                      <p className="text-sm text-gray-600">{insight.description}</p>
+                      <h4 className="font-semibold text-gray-900 dark:text-white mb-1">{insight.title}</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-300">{insight.description}</p>
                     </div>
                   </div>
                 </div>

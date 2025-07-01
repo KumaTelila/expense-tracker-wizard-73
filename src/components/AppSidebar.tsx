@@ -46,7 +46,7 @@ export function AppSidebar({ activeView, setActiveView }: AppSidebarProps) {
 
   return (
     <Sidebar className={isCollapsed ? 'w-16' : 'w-64'} collapsible="icon">
-      <SidebarContent className="bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700">
+      <SidebarContent className="bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 flex flex-col">
         {/* Header */}
         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-3">
@@ -61,9 +61,47 @@ export function AppSidebar({ activeView, setActiveView }: AppSidebarProps) {
           </div>
         </div>
 
-        {/* User info */}
-        {!isCollapsed && (
-          <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+        {/* Navigation */}
+        <div className="flex-1">
+          <SidebarGroup>
+            <SidebarGroupLabel className={isCollapsed ? 'sr-only' : ''}>Navigation</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {menuItems.map((item) => (
+                  <SidebarMenuItem key={item.id}>
+                    <SidebarMenuButton 
+                      onClick={() => setActiveView(item.id)}
+                      className={`w-full ${
+                        activeView === item.id 
+                          ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border-r-2 border-blue-700' 
+                          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
+                      }`}
+                    >
+                      <item.icon className="h-5 w-5" />
+                      {!isCollapsed && <span className="ml-3">{item.title}</span>}
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </div>
+
+        {/* Settings */}
+        <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+          <Button
+            variant="ghost"
+            className="w-full justify-start text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+            onClick={() => setActiveView('settings')}
+          >
+            <Settings className="h-5 w-5" />
+            {!isCollapsed && <span className="ml-3">Settings</span>}
+          </Button>
+        </div>
+
+        {/* User info at bottom */}
+        <div className="p-4 border-t border-gray-200 dark:border-gray-700 space-y-3">
+          {!isCollapsed && (
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold">
                 {user.name?.charAt(0) || 'U'}
@@ -73,43 +111,7 @@ export function AppSidebar({ activeView, setActiveView }: AppSidebarProps) {
                 <p className="text-sm text-gray-500 dark:text-gray-400 truncate">{user.email || 'user@example.com'}</p>
               </div>
             </div>
-          </div>
-        )}
-
-        {/* Navigation */}
-        <SidebarGroup>
-          <SidebarGroupLabel className={isCollapsed ? 'sr-only' : ''}>Navigation</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {menuItems.map((item) => (
-                <SidebarMenuItem key={item.id}>
-                  <SidebarMenuButton 
-                    onClick={() => setActiveView(item.id)}
-                    className={`w-full ${
-                      activeView === item.id 
-                        ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border-r-2 border-blue-700' 
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
-                    }`}
-                  >
-                    <item.icon className="h-5 w-5" />
-                    {!isCollapsed && <span className="ml-3">{item.title}</span>}
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        {/* Bottom actions */}
-        <div className="mt-auto p-4 border-t border-gray-200 dark:border-gray-700 space-y-2">
-          <Button
-            variant="ghost"
-            className="w-full justify-start text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
-            onClick={() => setActiveView('settings')}
-          >
-            <Settings className="h-5 w-5" />
-            {!isCollapsed && <span className="ml-3">Settings</span>}
-          </Button>
+          )}
           <Button
             variant="ghost"
             className="w-full justify-start text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
